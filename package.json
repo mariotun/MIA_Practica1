@@ -1,0 +1,24 @@
+{
+  "name": "Practica1",
+  "version": "1.0.0",
+  "description": "- Carga informacion a travez de un archivo csv a un modelo de datos ya creado, para realizar peticiones a una base de datos(mysql) con una api rest utilizando nodejs .",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mariotun/MIA_Practica1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mariotun/MIA_Practica1/issues"
+  },
+  "homepage": "https://github.com/mariotun/MIA_Practica1#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mysql": "^2.18.1"
+  }
+}
