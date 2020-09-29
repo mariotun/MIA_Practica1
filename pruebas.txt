@@ -1,0 +1,10 @@
+
+
+LOAD DATA LOCAL INFILE '/home/rafaelc/DataImport/DataCenterData.csv'
+INTO TABLE TamblatemporalAQUI
+CHARACTER SET latin1
+FIELDS TERMINATED BY  ';'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(nombre_compania, contacto_compania, correo_compania, telefono_compania, tipo, nombre, correo, telefono, @var_fec, direccion, ciudad, codigo_postal, region, producto, categoria_producto, cantidad, precio_unitario)
+SET fecha_registro = STR_TO_DATE(@var_fec, '%d/%m/%Y');

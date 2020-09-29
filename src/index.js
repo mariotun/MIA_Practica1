@@ -1,5 +1,5 @@
 const express = require('express');// la funcionalidad se guarda en la variable express
-const aplicacion= express();// el objeto que retorna la funcion express() se va a guardar dentro de la variable aplicacion
+const aplicacion= express();// el objeto que retorna la funcion express() se va a guardar dentro de la constante aplicacion
 
 
 // configuraciones
@@ -12,9 +12,9 @@ aplicacion.use(express.json());/* ya que va a ser una apirest , con esto el serv
 
 
 //Routes(url) para procesar,recibir o guardar datos ,forma de comunicacion con el servidor y el navegador.
-aplicacion.use(require('./rutas/ruta_reporte'));
+aplicacion.use(require('./rutas/endpoints'));//aqui exportamos(requerimos) la constante "ruta" del archivo endpoints.js
 
-// Starting the server
+// es para levantar el servidor
 aplicacion.listen(aplicacion.get('puerto'), () => {
   console.log(`Servidor en el puerto ${aplicacion.get('puerto')}`);
 });
