@@ -1,9 +1,19 @@
 
 
+
+//import { CargarModelo } from "./consultas.js";
+//import { CargarTemporal } from "./consultas.js";
+//const consultas=new Queryss();
+const Queryss = require("./consultas.js");
+var consultass = new Queryss();
+
+
 const express = require('express');//vamos a requerir express y lo guardamos en la constante express.
 const ruta = express.Router(); //guardamos el objeto que va a devolver el metodo Router() en la constante ruta.
 
 const mysqlConnection  = require('../conexionDB.js');// aqui exportamos(requerimos) la constante "conexion_mysql" del archivo conexionDB.js
+//const Queryss = require("./consultas.js");
+
 
 
 ruta.get('/', (req, res) => {
@@ -22,43 +32,37 @@ ruta.get('/', (req, res) => {
 
 
 //********************************************************************************************************************************
+
+ruta.get('/totaldatos', (req, res) => {
+
+  var consulta="SELECT count(*) FROM Temporal; \
+                \n SELECT count(*) FROM Region;\
+                SELECT * FROM Region ";
+
+mysqlConnection.query(consulta, (err, rows, fields) => {
+  if(!err) {
+    res.json(rows);
+   
+  } else {
+   // console.log(err);
+    res.send(err)
+  }
+});  
+});
+
+
+//********************************************************************************************************************************
 ruta.get('/cargarTemporal', (req, res) => {
 
-    var consulta=" USE practica1;\
-    Create temporary table Temporal(\
-    nombre_compania varchar(50) not null,\
-    contacto_compania varchar(50) not null,\
-    correo_compania varchar(50) not null,\
-    telefono_compania varchar(15) not null,\
-    tipo char(1) not null,\
-    nombre varchar(50) not null,\
-    correo varchar(50) not null,\
-    telefono varchar(15) not null,\
-    fecha_registro date not null,\
-    direccion varchar(50) not null,\
-    ciudad varchar(50) not null,\
-    codigo_postal int,\
-    region varchar(50),\
-    producto varchar(50),\
-    categoria_producto varchar(50),\
-    cantidad int not null,\
-    precio_unitario decimal(3) not null\
-    );\
-     LOAD DATA LOCAL INFILE '/home/DataCenterData.csv'\
-    INTO TABLE Temporal \
-    CHARACTER SET latin1 \
-    FIELDS TERMINATED BY  ';' \
-    LINES TERMINATED BY '\r\n' \
-    IGNORE 1 LINES \
-    (nombre_compania, contacto_compania, correo_compania, telefono_compania, tipo, nombre, correo, telefono, @var_fecha, direccion, ciudad, codigo_postal, region, producto, categoria_producto, cantidad, precio_unitario) \
-    SET fecha_registro = STR_TO_DATE(@var_fecha, '%d/%m/%Y');";
+   var consulta=consultass. Get_CargarTemporal();
 
     mysqlConnection.query(consulta, (err, rows, fields) => { 
         if(!err) {
           res.json(rows);
          
         } else {
-          console.log(err);
+          //console.log(err);
+          res.send(err)
         }
       });  
 
@@ -66,16 +70,19 @@ ruta.get('/cargarTemporal', (req, res) => {
 });
 
 //********************************************************************************************************************************
-ruta.get('/cargarModelo', (req, res) => {
+ruta.get('/cargarModelo', async function(req, res){
 
-    var consulta='SELECT * FROM Temporal limit 5;'
-    
-    mysqlConnection.query(consulta, (err, rows, fields) => { 
+   // var consulta='SELECT * FROM Temporal limit 5;'
+   var consulta=consultass. Get_CargarModelo();
+         
+    mysqlConnection.query(consulta, async function (err, rows, fields){ 
         if(!err) {
           res.json(rows);
+          console.log("se cargo el modelo")
          
         } else {
-          console.log(err);
+         // console.log(err);
+         res.send(err)
         }
       });  
 
