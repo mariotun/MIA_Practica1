@@ -24,8 +24,8 @@
         fecha_registro date not null,\
         direccion varchar(50) not null,\
         ciudad varchar(50) not null,\
-        codigo_postal int,\
-        region varchar(50),\
+        codigo_postal int(30) not null,\
+        region varchar(50) not null,\
         producto varchar(50),\
         categoria_producto varchar(50),\
         cantidad int not null,\
@@ -71,8 +71,8 @@
                         ENGINE = InnoDB CHARACTER SET latin1; \n ";
             
             consulta+="CREATE TABLE IF NOT EXISTS Ciudad (\
-                    Codigo_Postal INT NOT NULL,\
-                    Nombre_Ciudad VARCHAR(45) NOT NULL,\
+                    Codigo_Postal INT(30) NOT NULL,\
+                    Nombre_Ciudad VARCHAR(50) NOT NULL,\
                     Id_Region INT NOT NULL,\
                     PRIMARY KEY (Codigo_Postal),\
                     INDEX fk_Ciudad_Region_idx (Id_Region ASC) VISIBLE,\
@@ -84,11 +84,11 @@
                     ENGINE = InnoDB CHARACTER SET latin1; \n ";
                 
             consulta+="CREATE TABLE IF NOT EXISTS Cliente (\
-                    Telefono_Cliente VARCHAR(20) NOT NULL,\
-                    Nombre_Cliente VARCHAR(45) NOT NULL,\
-                    Correo_Cliente VARCHAR(45) NOT NULL,\
+                    Telefono_Cliente VARCHAR(15) NOT NULL,\
+                    Nombre_Cliente VARCHAR(50) NOT NULL,\
+                    Correo_Cliente VARCHAR(50) NOT NULL,\
                     Fecha_Registro_Cliente DATE NOT NULL,\
-                    Direccion_Cliente VARCHAR(45) NOT NULL,\
+                    Direccion_Cliente VARCHAR(50) NOT NULL,\
                     Codigo_Postal INT NOT NULL,\
                     PRIMARY KEY (Telefono_Cliente),\
                     INDEX fk_Cliente_Ciudad1_idx (Codigo_Postal ASC) VISIBLE,\
@@ -100,11 +100,11 @@
                     ENGINE = InnoDB CHARACTER SET latin1; \n ";
 
                 consulta+="CREATE TABLE IF NOT EXISTS Proveedor (\
-                    Telefono_Proveedor VARCHAR(20) NOT NULL,\
-                    Nombre_Proveedor VARCHAR(45) NOT NULL,\
-                    Correo_Proveedor VARCHAR(45) NOT NULL,\
+                    Telefono_Proveedor VARCHAR(15) NOT NULL,\
+                    Nombre_Proveedor VARCHAR(50) NOT NULL,\
+                    Correo_Proveedor VARCHAR(50) NOT NULL,\
                     Fecha_Registro_Proveedor DATE NOT NULL,\
-                    Direccion_Proveedor VARCHAR(45) NOT NULL,\
+                    Direccion_Proveedor VARCHAR(50) NOT NULL,\
                     Codigo_Postal INT NOT NULL,\
                     PRIMARY KEY (Telefono_Proveedor),\
                     INDEX fk_Proveedor_Ciudad1_idx (Codigo_Postal ASC) VISIBLE,\
@@ -119,7 +119,7 @@
                     Telefono_Compania VARCHAR(20) NOT NULL,\
                     Nombre_Compania VARCHAR(45) NOT NULL,\
                     Contacto_Compania VARCHAR(45) NOT NULL,\
-                    Correo_Compania VARCHAR(45) NULL,\
+                    Correo_Compania VARCHAR(50) NOT NULL,\
                     PRIMARY KEY (Telefono_Compania))\
                     ENGINE = InnoDB CHARACTER SET latin1; \n ";
                 
@@ -216,16 +216,18 @@
 
                 consulta+="INSERT INTO Region (Nombre_Region)\
                         SELECT DISTINCT region FROM Temporal;\
-                        INSERT INTO Compania (Nombre_Compania,Contacto_Compania,Correo_Compania,Telefono_Compania)\
-                        SELECT DISTINCT  (nombre_compania,contacto_compania,correo_compania,telefono_compania) FROM Temporal;\
-                        INSERT INTO Categoria (Nombre_Region)\
-                        SELECT DISTINCT region FROM Temporal;
-                        
-                        
-                        
-                        
-                        
-                        ";
+                        INSERT INTO Compania(Nombre_Compania,Contacto_Compania,Correo_Compania,Telefono_Compania)\
+                        SELECT DISTINCT nombre_compania,contacto_compania,correo_compania,telefono_compania FROM Temporal;\
+                        INSERT INTO Categoria (Nombre_Categoria)\
+                        SELECT DISTINCT categoria_producto FROM Temporal;\
+                        \
+                        INSERT INTO Ciudad (Codigo_Postal,Nombre_Ciudad,Id_Region)\
+                        SELECT DISTINCT Temporal.codigo_postal,Temporal.ciudad,Region.Id_Region FROM Temporal,Region WHERE Region.Nombre_Region=Temporal.region;\
+                        \;";
+                        /*INSERT INTO Cliente (Telefono_Cliente,Nombre_Cliente,Correo_Cliente,Fecha_Registro_Cliente,Direccion_Cliente)\
+                        SELECT DISTINCT telefono,nombre,correo,fecha_registro,direccion FROM Temporal WHERE tipo='C';\
+                        INSERT INTO Proveedor (Telefono_Proveedor,Nombre_Proveedor,Correo_Proveedor,Fecha_Registro_Proveedor,Direccion_Proveedor)\
+                        SELECT DISTINCT telefono,nombre,correo,fecha_registro,direccion FROM Temporal WHERE tipo='P';";*/
                         
         return consulta;
     };

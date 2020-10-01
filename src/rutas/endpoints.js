@@ -37,7 +37,7 @@ ruta.get('/totaldatos', (req, res) => {
 
   var consulta="SELECT count(*) FROM Temporal; \
                 \n SELECT count(*) FROM Region;\
-                SELECT * FROM Region ";
+                SELECT * FROM Region; SELECT count(*) FROM Compania; SELECT count(*) FROM Categoria; SELECT count(*) FROM Ciudad;";
 
 mysqlConnection.query(consulta, (err, rows, fields) => {
   if(!err) {
@@ -75,7 +75,7 @@ ruta.get('/cargarModelo', async function(req, res){
    // var consulta='SELECT * FROM Temporal limit 5;'
    var consulta=consultass. Get_CargarModelo();
          
-    mysqlConnection.query(consulta, async function (err, rows, fields){ 
+    mysqlConnection.query(consulta, async function (err, rows){ 
         if(!err) {
           res.json(rows);
           console.log("se cargo el modelo")
@@ -85,7 +85,7 @@ ruta.get('/cargarModelo', async function(req, res){
          res.send(err)
         }
       });  
-
+    //  res.end();
 });
 
 //********************************************************************************************************************************
