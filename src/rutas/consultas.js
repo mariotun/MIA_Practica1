@@ -29,7 +29,7 @@
         producto varchar(50),\
         categoria_producto varchar(50),\
         cantidad int not null,\
-        precio_unitario decimal(3) not null\
+        precio_unitario decimal(19,2) not null\
         );\
          LOAD DATA LOCAL INFILE '/home/DataCenterData.csv'\
         INTO TABLE Temporal \
@@ -49,7 +49,7 @@
         var consulta="USE practica1;\n";
 
             consulta+="SET FOREIGN_KEY_CHECKS = 0;\
-                DROP TABLE IF EXISTS Region,Ciudad,Cliente,Proveedor,Compania,Orden,Factura,Compra,Categoria,Producto,Detalle;\
+                DROP TABLE IF EXISTS Region,Ciudad,Cliente,Proveedor,Compania,Orden,Compra,Categoria,Producto,DetalleOrden,DetalleCompra;\
                 SET FOREIGN_KEY_CHECKS = 1;";
 
             /*consulta+=" TRUNCATE TABLE  Region;\
@@ -122,115 +122,244 @@
                     Correo_Compania VARCHAR(50) NOT NULL,\
                     PRIMARY KEY (Telefono_Compania))\
                     ENGINE = InnoDB CHARACTER SET latin1; \n ";
+
+                consulta+="CREATE TABLE IF NOT EXISTS Categoria (\
+                        Id_Categoria INT NOT NULL AUTO_INCREMENT,\
+                        Nombre_Categoria VARCHAR(45) NOT NULL,\
+                        PRIMARY KEY (Id_Categoria))\
+                        ENGINE = InnoDB CHARACTER SET latin1; \n ";
+    
+                consulta+="CREATE TABLE IF NOT EXISTS Producto (\
+                        Id_Producto INT NOT NULL AUTO_INCREMENT,\
+                        Nombre_Producto VARCHAR(45) NOT NULL,\
+                        Precio_Unitario DECIMAL(19,2) NOT NULL,\
+                        Id_Categoria INT NOT NULL,\
+                        PRIMARY KEY (Id_Producto),\
+                        INDEX fk_Producto_Categoria1_idx (Id_Categoria ASC) VISIBLE,\
+                        CONSTRAINT fk_Producto_Categoria1\
+                            FOREIGN KEY (Id_Categoria)\
+                            REFERENCES Categoria (Id_Categoria)\
+                            ON DELETE NO ACTION\
+                            ON UPDATE NO ACTION)\
+                        ENGINE = InnoDB CHARACTER SET latin1; \n ";
                 
                 consulta+="CREATE TABLE IF NOT EXISTS Orden (\
                     Id_Orden INT NOT NULL AUTO_INCREMENT,\
                     Telefono_Proveedor VARCHAR(20) NOT NULL,\
+                    Telefono_Compania VARCHAR(20) NOT NULL,\
                     PRIMARY KEY (Id_Orden),\
                     INDEX fk_Orden_Proveedor1_idx (Telefono_Proveedor ASC) VISIBLE,\
+                    INDEX fk_Orden_Compania1_idx (Telefono_Compania ASC) VISIBLE,\
                     CONSTRAINT fk_Orden_Proveedor1\
-                        FOREIGN KEY (Telefono_Proveedor)\
-                        REFERENCES Proveedor (Telefono_Proveedor)\
-                        ON DELETE NO ACTION\
-                        ON UPDATE NO ACTION)\
+                      FOREIGN KEY (Telefono_Proveedor)\
+                      REFERENCES Proveedor (Telefono_Proveedor)\
+                      ON DELETE NO ACTION\
+                      ON UPDATE NO ACTION,\
+                    CONSTRAINT fk_Orden_Compania1\
+                      FOREIGN KEY (Telefono_Compania)\
+                      REFERENCES Compania (Telefono_Compania)\
+                      ON DELETE NO ACTION\
+                      ON UPDATE NO ACTION)\
                     ENGINE = InnoDB CHARACTER SET latin1; \n ";
 
-                consulta+="CREATE TABLE IF NOT EXISTS Categoria (\
-                    Id_Categoria INT NOT NULL AUTO_INCREMENT,\
-                    Nombre_Categoria VARCHAR(45) NOT NULL,\
-                    PRIMARY KEY (Id_Categoria))\
-                    ENGINE = InnoDB CHARACTER SET latin1; \n ";
-
-                consulta+="CREATE TABLE IF NOT EXISTS Producto (\
-                    Id_Producto INT NOT NULL AUTO_INCREMENT,\
-                    Nombre_Producto VARCHAR(45) NOT NULL,\
-                    Precio_Unitario DECIMAL(3) NOT NULL,\
-                    Id_Categoria INT NOT NULL,\
-                    PRIMARY KEY (Id_Producto),\
-                    INDEX fk_Producto_Categoria1_idx (Id_Categoria ASC) VISIBLE,\
-                    CONSTRAINT fk_Producto_Categoria1\
-                        FOREIGN KEY (Id_Categoria)\
-                        REFERENCES Categoria (Id_Categoria)\
-                        ON DELETE NO ACTION\
-                        ON UPDATE NO ACTION)\
-                    ENGINE = InnoDB CHARACTER SET latin1; \n ";
 
                 consulta+="CREATE TABLE IF NOT EXISTS Compra (\
-                    Id_Compra INT NOT NULL,\
+                    Id_Compra INT NOT NULL AUTO_INCREMENT,\
                     Telefono_Cliente VARCHAR(20) NOT NULL,\
+                    Telefono_Compania VARCHAR(20) NOT NULL,\
                     PRIMARY KEY (Id_Compra),\
                     INDEX fk_Compra_Cliente1_idx (Telefono_Cliente ASC) VISIBLE,\
+                    INDEX fk_Compra_Compania1_idx (Telefono_Compania ASC) VISIBLE,\
                     CONSTRAINT fk_Compra_Cliente1\
-                        FOREIGN KEY (Telefono_Cliente)\
-                        REFERENCES Cliente (Telefono_Cliente)\
-                        ON DELETE NO ACTION\
-                        ON UPDATE NO ACTION)\
+                      FOREIGN KEY (Telefono_Cliente)\
+                      REFERENCES Cliente (Telefono_Cliente)\
+                      ON DELETE NO ACTION\
+                      ON UPDATE NO ACTION,\
+                    CONSTRAINT fk_Compra_Compania1\
+                      FOREIGN KEY (Telefono_Compania)\
+                      REFERENCES Compania (Telefono_Compania)\
+                      ON DELETE NO ACTION\
+                      ON UPDATE NO ACTION)\
                     ENGINE = InnoDB CHARACTER SET latin1; \n ";
                 
-                consulta+="CREATE TABLE IF NOT EXISTS Factura (\
-                    Id_Factura INT NOT NULL AUTO_INCREMENT,\
-                    Total INT NOT NULL,\
+                consulta+="CREATE TABLE IF NOT EXISTS DetalleOrden (\
+                    Id_detalle_orden INT NOT NULL AUTO_INCREMENT,\
+                    Cantidad_Venta INT NOT NULL,\
                     Id_Orden INT NOT NULL,\
-                    Id_Compra INT NOT NULL,\
-                    Telefono_Compania VARCHAR(20) NOT NULL,\
-                    PRIMARY KEY (Id_Factura),\
-                    INDEX fk_Factura_Orden1_idx (Id_Orden ASC) VISIBLE,\
-                    INDEX fk_Factura_Compra1_idx (Id_Compra ASC) VISIBLE,\
-                    INDEX fk_Factura_Compania1_idx (Telefono_Compania ASC) VISIBLE,\
-                    CONSTRAINT fk_Factura_Orden1\
+                    Id_Producto INT NOT NULL,\
+                    PRIMARY KEY (Id_detalle_orden),\
+                    INDEX fk_DetalleOrden_Orden1_idx (Id_Orden ASC) VISIBLE,\
+                    INDEX fk_DetalleOrden_Producto1_idx (Id_Producto ASC) VISIBLE,\
+                    CONSTRAINT fk_DetalleOrden_Orden1\
                         FOREIGN KEY (Id_Orden)\
                         REFERENCES Orden (Id_Orden)\
                         ON DELETE NO ACTION\
                         ON UPDATE NO ACTION,\
-                    CONSTRAINT fk_Factura_Compra1\
-                        FOREIGN KEY (Id_Compra)\
-                        REFERENCES Compra (Id_Compra)\
-                        ON DELETE NO ACTION\
-                        ON UPDATE NO ACTION,\
-                    CONSTRAINT fk_Factura_Compania1\
-                        FOREIGN KEY (Telefono_Compania)\
-                        REFERENCES Compania (Telefono_Compania)\
+                    CONSTRAINT fk_DetalleOrden_Producto1\
+                        FOREIGN KEY (Id_Producto)\
+                        REFERENCES Producto (Id_Producto)\
                         ON DELETE NO ACTION\
                         ON UPDATE NO ACTION)\
                     ENGINE = InnoDB CHARACTER SET latin1; \n ";
 
-                consulta+="CREATE TABLE IF NOT EXISTS Detalle (\
-                    Id_Detalle INT NOT NULL AUTO_INCREMENT,\
-                    Cantidad INT NOT NULL,\
+                consulta+="CREATE TABLE IF NOT EXISTS DetalleCompra (\
+                    Id_detalle_compra INT NOT NULL AUTO_INCREMENT,\
+                    Cantidad_Compra INT NOT NULL,\
+                    Id_Compra INT NOT NULL,\
                     Id_Producto INT NOT NULL,\
-                    Id_Factura INT NOT NULL,\
-                    PRIMARY KEY (Id_Detalle),\
-                    INDEX fk_Detalle_Producto1_idx (Id_Producto ASC) VISIBLE,\
-                    INDEX fk_Detalle_Factura1_idx (Id_Factura ASC) VISIBLE,\
-                    CONSTRAINT fk_Detalle_Producto1\
-                        FOREIGN KEY (Id_Producto)\
-                        REFERENCES Producto (Id_Producto)\
-                        ON DELETE NO ACTION\
-                        ON UPDATE NO ACTION,\
-                    CONSTRAINT fk_Detalle_Factura1\
-                        FOREIGN KEY (Id_Factura)\
-                        REFERENCES Factura (Id_Factura)\
-                        ON DELETE NO ACTION\
-                        ON UPDATE NO ACTION)\
+                    PRIMARY KEY (id_detalle_compra),\
+                    INDEX fk_DetalleCompra_Compra1_idx (Id_Compra ASC) VISIBLE,\
+                    INDEX fk_DetalleCompra_Producto1_idx (Id_Producto ASC) VISIBLE,\
+                    CONSTRAINT fk_DetalleCompra_Compra1\
+                      FOREIGN KEY (Id_Compra)\
+                      REFERENCES Compra (Id_Compra)\
+                      ON DELETE NO ACTION\
+                      ON UPDATE NO ACTION,\
+                    CONSTRAINT fk_DetalleCompra_Producto1\
+                      FOREIGN KEY (Id_Producto)\
+                      REFERENCES Producto (Id_Producto)\
+                      ON DELETE NO ACTION\
+                      ON UPDATE NO ACTION)\
                     ENGINE = InnoDB CHARACTER SET latin1; \n ";
 
                 consulta+="INSERT INTO Region (Nombre_Region)\
                         SELECT DISTINCT region FROM Temporal;\
-                        INSERT INTO Compania(Nombre_Compania,Contacto_Compania,Correo_Compania,Telefono_Compania)\
-                        SELECT DISTINCT nombre_compania,contacto_compania,correo_compania,telefono_compania FROM Temporal;\
+                        \
+                        INSERT INTO Compania(Telefono_Compania,Nombre_Compania,Contacto_Compania,Correo_Compania)\
+                        SELECT DISTINCT telefono_compania,nombre_compania,contacto_compania,correo_compania FROM Temporal;\
+                        \
                         INSERT INTO Categoria (Nombre_Categoria)\
                         SELECT DISTINCT categoria_producto FROM Temporal;\
                         \
                         INSERT INTO Ciudad (Codigo_Postal,Nombre_Ciudad,Id_Region)\
                         SELECT DISTINCT Temporal.codigo_postal,Temporal.ciudad,Region.Id_Region FROM Temporal,Region WHERE Region.Nombre_Region=Temporal.region;\
-                        \;";
-                        /*INSERT INTO Cliente (Telefono_Cliente,Nombre_Cliente,Correo_Cliente,Fecha_Registro_Cliente,Direccion_Cliente)\
-                        SELECT DISTINCT telefono,nombre,correo,fecha_registro,direccion FROM Temporal WHERE tipo='C';\
-                        INSERT INTO Proveedor (Telefono_Proveedor,Nombre_Proveedor,Correo_Proveedor,Fecha_Registro_Proveedor,Direccion_Proveedor)\
-                        SELECT DISTINCT telefono,nombre,correo,fecha_registro,direccion FROM Temporal WHERE tipo='P';";*/
+                        \
+                        INSERT INTO Cliente (Telefono_Cliente,Nombre_Cliente,Correo_Cliente,Fecha_Registro_Cliente,Direccion_Cliente,Codigo_Postal)\
+                        SELECT DISTINCT tmp.telefono,tmp.nombre,tmp.correo,tmp.fecha_registro,tmp.direccion,ci.Codigo_Postal FROM Temporal tmp,Ciudad ci WHERE tmp.tipo='C' and ci.Codigo_Postal=tmp.codigo_postal;\
+                        \
+                        INSERT INTO Proveedor (Telefono_Proveedor,Nombre_Proveedor,Correo_Proveedor,Fecha_Registro_Proveedor,Direccion_Proveedor,Codigo_postal)\
+                        SELECT DISTINCT tmp.telefono,tmp.nombre,tmp.correo,tmp.fecha_registro,tmp.direccion,ci.Codigo_Postal FROM Temporal tmp,Ciudad ci WHERE tmp.tipo='P' and ci.Codigo_Postal=tmp.codigo_postal;\
+                        \
+                        INSERT INTO Producto (Nombre_Producto,Precio_Unitario,Id_Categoria)\
+                        SELECT DISTINCT tmp.producto,tmp.precio_unitario,cat.Id_Categoria FROM Temporal tmp,Categoria cat WHERE cat.Nombre_Categoria=tmp.categoria_producto;\
+                        \
+                        INSERT INTO Orden (Telefono_Proveedor,Telefono_Compania)\
+                        SELECT DISTINCT pr.Telefono_Proveedor,cmp.Telefono_Compania FROM Temporal tmp ,Proveedor pr,Compania cmp\
+                        WHERE pr.Telefono_Proveedor=tmp.telefono and cmp.Nombre_Compania=tmp.nombre_compania;\
+                        \
+                        INSERT INTO DetalleOrden (Cantidad_Venta,Id_Orden,Id_Producto)\
+                        SELECT DISTINCT tmp.cantidad,ord.Id_Orden,prod.Id_Producto FROM Temporal tmp ,Proveedor pr,Orden ord,Producto prod,Compania cmp\
+                        WHERE prod.Nombre_Producto=tmp.producto and pr.Telefono_Proveedor=tmp.telefono and cmp.Nombre_Compania=tmp.nombre_compania \
+                        and ord.Telefono_Proveedor=pr.Telefono_Proveedor and ord.Telefono_Compania=cmp.Telefono_Compania;\
+                         \
+                        INSERT INTO Compra (Telefono_Cliente,Telefono_Compania)\
+                        SELECT DISTINCT cli.Telefono_Cliente,cmp.Telefono_Compania FROM Temporal tmp ,Cliente cli,Compania cmp\
+                        WHERE cli.Telefono_Cliente=tmp.telefono and cmp.Nombre_Compania=tmp.nombre_compania;\
+                        \
+                        INSERT INTO DetalleCompra (Cantidad_Compra,Id_Compra,Id_Producto)\
+                        SELECT DISTINCT tmp.cantidad,cpra.Id_Compra,prod.Id_Producto FROM Temporal tmp ,Cliente cli,Compra cpra,Producto prod,Compania cmp\
+                        WHERE prod.Nombre_Producto=tmp.producto and cli.Telefono_Cliente=tmp.telefono and cmp.Nombre_Compania=tmp.nombre_compania \
+                        and cpra.Telefono_Cliente=cli.Telefono_Cliente and cpra.Telefono_Compania=cmp.Telefono_Compania;";
                         
+                        /*
+                        INSERT INTO Compra (Telefono_Cliente)\
+                        SELECT DISTINCT cl.Telefono_Cliente FROM Temporal tmp ,Cliente cl WHERE tmp.tipo='C' and cl.Telefono_Cliente=tmp.telefono;\
+                        \
+                        INSERT INTO Factura (Id_Orden,Id_Compra,Telefono_Compania)\
+                        SELECT DISTINCT ord.Id_Orden,cpra.Id_Compra,comp.Telefono_Compania FROM Temporal tmp ,Orden ord,Compania comp,Compra cpra,Cliente cli,Proveedor prov \
+                        WHERE comp.Telefono_Compania=tmp.telefono_compania and tmp.tipo='C' and cli.Telefono_Cliente=tmp.telefono ";*/
+                        
+                        //WHERE tmp.tipo='P' and Orden.Telefono_Proveedor=tmp.telefono or tmp.tipo='C' and cpr.Telefono_Cliente=tmp.telefono and cp.Telefono_Compania=tmp.telefono  
         return consulta;
     };
+
+
+    Reporte1(){
+
+        var consulta="";
+
+        consulta+="select prov.Nombre_Proveedor,prov.Telefono_Proveedor,ordd.Id_Orden,sum(deord.Cantidad_Venta * prod.Precio_Unitario) as total \
+        from Proveedor prov,Orden ordd,DetalleOrden deord,Producto prod\
+        where prov.Telefono_Proveedor=ordd.Telefono_Proveedor and ordd.Id_Orden=deord.Id_Orden and deord.Id_Producto=prod.Id_Producto\
+        group by prov.Nombre_Proveedor,prov.Telefono_Proveedor,ordd.Id_Orden\
+        order by total desc\
+        limit 1;";
+
+        return consulta;
+    };
+
+    Reporte2(){
+
+        var consulta="";
+
+
+        return consulta;
+    };
+
+    Reporte3(){
+
+        var consulta="";
+
+
+        return consulta;
+    };
+
+    Reporte4(){
+
+        var consulta="";
+
+
+        return consulta;
+    };
+
+    Reporte5(){
+
+        var consulta="";
+
+
+        return consulta;
+    };
+
+    Reporte6(){
+
+        var consulta="";
+
+
+        return consulta;
+    };
+
+    Reporte7(){
+
+        var consulta="";
+
+
+        return consulta;
+    };
+
+    Reporte8(){
+
+        var consulta="";
+
+
+        return consulta;
+    };
+
+    Reporte9(){
+
+        var consulta="";
+
+
+        return consulta;
+    };
+
+    Reporte10(){
+
+        var consulta="";
+
+
+        return consulta;
+    };
+    
 
  }
     module.exports= Queryss ;
