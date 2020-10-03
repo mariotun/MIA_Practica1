@@ -291,7 +291,12 @@
     Reporte2(){
 
         var consulta="";
-
+        
+        consulta+="select cli.Telefono_Cliente,cli.Nombre_Cliente,sum(dcom.Cantidad_Compra) as cantidad,sum(dcom.Cantidad_Compra*prod.Precio_Unitario) as total from Cliente cli,DetalleCompra dcomProducto prod,Compra cpra\
+        where cli.Telefono_Cliente=cpra.Telefono_Cliente and cpra.Id_Compra=dcom.Id_Compra and dcom.Id_Producto=prod.Id_Producto\
+         group by cli.Telefono_Cliente,cli.Nombre_Cliente\
+        order by cantidad desc\
+        limit 1;";
 
         return consulta;
     };
