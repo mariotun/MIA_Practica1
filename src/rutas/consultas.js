@@ -279,11 +279,11 @@
         var consulta="";
 
         consulta+="select prov.Nombre_Proveedor,prov.Telefono_Proveedor,ordd.Id_Orden,sum(deord.Cantidad_Venta * prod.Precio_Unitario) as total \
-        from Proveedor prov,Orden ordd,DetalleOrden deord,Producto prod\
-        where prov.Telefono_Proveedor=ordd.Telefono_Proveedor and ordd.Id_Orden=deord.Id_Orden and deord.Id_Producto=prod.Id_Producto\
-        group by prov.Nombre_Proveedor,prov.Telefono_Proveedor,ordd.Id_Orden\
-        order by total desc\
-        limit 1;";
+                from Proveedor prov,Orden ordd,DetalleOrden deord,Producto prod\
+                where prov.Telefono_Proveedor=ordd.Telefono_Proveedor and ordd.Id_Orden=deord.Id_Orden and deord.Id_Producto=prod.Id_Producto\
+                group by prov.Nombre_Proveedor,prov.Telefono_Proveedor,ordd.Id_Orden\
+                order by total desc\
+                limit 1;";
 
         return consulta;
     };
@@ -293,10 +293,10 @@
         var consulta="";
         
         consulta+="select cli.Telefono_Cliente,cli.Nombre_Cliente,sum(dcom.Cantidad_Compra) as cantidad,sum(dcom.Cantidad_Compra*prod.Precio_Unitario) as total from Cliente cli,DetalleCompra dcomProducto prod,Compra cpra\
-        where cli.Telefono_Cliente=cpra.Telefono_Cliente and cpra.Id_Compra=dcom.Id_Compra and dcom.Id_Producto=prod.Id_Producto\
-         group by cli.Telefono_Cliente,cli.Nombre_Cliente\
-        order by cantidad desc\
-        limit 1;";
+                where cli.Telefono_Cliente=cpra.Telefono_Cliente and cpra.Id_Compra=dcom.Id_Compra and dcom.Id_Producto=prod.Id_Producto\
+                group by cli.Telefono_Cliente,cli.Nombre_Cliente\
+                order by cantidad desc\
+                limit 1;";
 
         return consulta;
     };
@@ -304,6 +304,20 @@
     Reporte3(){
 
         var consulta="";
+
+        consulta+="(select prov.Direccion_Proveedor, reg.Nombre_Region,ciu.Nombre_Ciudad ,ciu.Codigo_Postal ,count(ordd.Id_Orden) as total\
+                from Proveedor prov,Region reg,Ciudad ciu,Orden ordd\
+                where prov.Codigo_Postal=ciu.Codigo_Postal and ciu.Id_Region=reg.Id_Region and prov.Telefono_Proveedor=ordd.Telefono_Proveedor \
+                group by  prov.Direccion_Proveedor,reg.Nombre_Region,ciu.Nombre_Ciudad ,ciu.Codigo_Postal \
+                order by total desc \
+                limit 2) \
+                union \
+                (select prov.Direccion_Proveedor, reg.Nombre_Region,ciu.Nombre_Ciudad ,ciu.Codigo_Postal ,count(ordd.Id_Orden) as total \
+                from Proveedor prov,Region reg,Ciudad ciu,Orden ordd\
+                where prov.Codigo_Postal=ciu.Codigo_Postal and ciu.Id_Region=reg.Id_Region and prov.Telefono_Proveedor=ordd.Telefono_Proveedor \
+                group by  prov.Direccion_Proveedor,reg.Nombre_Region,ciu.Nombre_Ciudad ,ciu.Codigo_Postal \
+                order by total asc \
+                limit 2);";
 
 
         return consulta;
@@ -320,6 +334,20 @@
     Reporte5(){
 
         var consulta="";
+
+        consulta+="(select MONTH(cli.Fecha_Registro_Cliente) as Mes,cli.Fecha_Registro_Cliente,cli.Nombre_Cliente,sum(dcom.Cantidad_Compra*prod.Precio_Unitario) as Total ,'mas compra'as Tipo \
+                from Cliente cli,DetalleCompra dcom,Producto prod,Compra cpra \
+                where dcom.Id_Producto=prod.Id_Producto and dcom.Id_Compra=cpra.Id_Compra and cpra.Telefono_Cliente=cli.Telefono_cliente \
+                group by cli.Telefono_Cliente,cli.Fecha_Registro_Cliente \
+                order by total desc \
+                limit 5) \
+                union \
+                (select MONTH(cli.Fecha_Registro_Cliente) as Mes,cli.Fecha_Registro_Cliente ,cli.Nombre_Cliente,sum(dcom.Cantidad_Compra*prod.Precio_Unitario) as Total ,'menos compra'as Tipo \
+                from Cliente cli,DetalleCompra dcom,Producto prod,Compra cpra \
+                where dcom.Id_Producto=prod.Id_Producto and dcom.Id_Compra=cpra.Id_Compra and cpra.Telefono_Cliente=cli.Telefono_cliente \
+                group by cli.Telefono_Cliente,cli.Fecha_Registro_Cliente \
+                order by total asc  \
+                limit 5);";
 
 
         return consulta;
@@ -353,6 +381,22 @@
 
         var consulta="";
 
+        consulta+="(select cli.Direccion_Cliente,cli.Nombre_Cliente,rg.Nombre_Region,ciu.Nombre_Ciudad,ciu.Codigo_Postal,sum(dcom.Cantidad_Compra*pro.Precio_Unitario) as Total_Compra,'Compra Mas' as Descripcion \
+                from Cliente cli,Region rg,Ciudad ciu,DetalleCompra dcom,Compra cpra,Producto pro \
+                where rg.Id_Region=ciu.Id_Region and ciu.Codigo_Postal=cli.Codigo_Postal and cli.Telefono_Cliente=cpra.Telefono_Cliente \
+                and cpra.Id_Compra=dcom.Id_Compra and pro.Id_Producto=dcom.Id_Producto \
+                group by  cli.Direccion_Cliente,cli.Nombre_Cliente,rg.Nombre_Region,ciu.Nombre_Ciudad,ciu.Codigo_Postal \
+                order by Total_Compra desc \
+                limit 1) \
+                union \
+                (select cli.Direccion_Cliente,cli.Nombre_Cliente,rg.Nombre_Region,ciu.Nombre_Ciudad,ciu.Codigo_Postal,sum(dcom.Cantidad_Compra*pro.Precio_Unitario) as Total_Compra,'Compra Menos' as Descripcion \
+                from Cliente cli,Region rg,Ciudad ciu,DetalleCompra dcom,Compra cpra,Producto pro \
+                where rg.Id_Region=ciu.Id_Region and ciu.Codigo_Postal=cli.Codigo_Postal and cli.Telefono_Cliente=cpra.Telefono_Cliente \
+                and cpra.Id_Compra=dcom.Id_Compra and pro.Id_Producto=dcom.Id_Producto \
+                group by  cli.Direccion_Cliente,cli.Nombre_Cliente,rg.Nombre_Region,ciu.Nombre_Ciudad,ciu.Codigo_Postal \
+                order by Total_Compra asc \
+                limit 1);";
+
 
         return consulta;
     };
@@ -360,6 +404,14 @@
     Reporte10(){
 
         var consulta="";
+
+        consulta+="select cli.Nombre_Cliente , cat.Nombre_Categoria , sum(dcomp.Cantidad_Compra) as Cantidad_Compra \
+                from Cliente cli,Producto prod,Categoria cat,DetalleCompra dcomp,Compra cpra \
+                where dcomp.Id_Compra=cpra.Id_Compra and cpra.Telefono_Cliente=cli.Telefono_Cliente and dcomp.Id_Producto=prod.Id_Producto \
+                and prod.Id_Categoria=cat.Id_Categoria and cat.Nombre_Categoria =\"Seafood\" \
+                group by cli.Nombre_Cliente , cat.Nombre_Categoria \
+                order by Cantidad_Compra desc \
+                limit 10;";
 
 
         return consulta;
