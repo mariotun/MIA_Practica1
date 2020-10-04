@@ -6,6 +6,27 @@
         console.log("se creo una clase.");
     };
 
+    Eliminar_Tablas_Model(){
+
+        var consulta="";
+
+        consulta+="USE practica1; SET FOREIGN_KEY_CHECKS = 0;\
+        DROP TABLE IF EXISTS Region,Ciudad,Cliente,Proveedor,Compania,Orden,Compra,Categoria,Producto,DetalleOrden,DetalleCompra;\
+        SET FOREIGN_KEY_CHECKS = 1;";
+
+        return consulta;
+
+    }
+
+    Eliminar_Datos_Temporal(){
+
+        var consulta="";
+
+        consulta+="drop table if exists Temporal";
+
+        return consulta;
+    }
+
    
 
     Get_CargarTemporal(){
@@ -48,9 +69,9 @@
     Get_CargarModelo(){
         var consulta="USE practica1;\n";
 
-            consulta+="SET FOREIGN_KEY_CHECKS = 0;\
+           /* consulta+="SET FOREIGN_KEY_CHECKS = 0;\
                 DROP TABLE IF EXISTS Region,Ciudad,Cliente,Proveedor,Compania,Orden,Compra,Categoria,Producto,DetalleOrden,DetalleCompra;\
-                SET FOREIGN_KEY_CHECKS = 1;";
+                SET FOREIGN_KEY_CHECKS = 1;";*/
 
             /*consulta+=" TRUNCATE TABLE  Region;\
                     TRUNCATE  TABLE  Ciudad;\
@@ -292,7 +313,8 @@
 
         var consulta="";
         
-        consulta+="select cli.Telefono_Cliente,cli.Nombre_Cliente,sum(dcom.Cantidad_Compra) as cantidad,sum(dcom.Cantidad_Compra*prod.Precio_Unitario) as total from Cliente cli,DetalleCompra dcomProducto prod,Compra cpra\
+        consulta+="select cli.Telefono_Cliente,cli.Nombre_Cliente,sum(dcom.Cantidad_Compra) as cantidad,sum(dcom.Cantidad_Compra*prod.Precio_Unitario) as total\
+                from Cliente cli,DetalleCompra dcom,Producto prod,Compra cpra\
                 where cli.Telefono_Cliente=cpra.Telefono_Cliente and cpra.Id_Compra=dcom.Id_Compra and dcom.Id_Producto=prod.Id_Producto\
                 group by cli.Telefono_Cliente,cli.Nombre_Cliente\
                 order by cantidad desc\
