@@ -327,6 +327,14 @@
 
         var consulta="";
 
+        consulta+="select cli.Telefono_Cliente,cli.Nombre_Cliente,count(cli.Telefono_Cliente) as ordenes,sum(dcom.Cantidad_Compra) as total,sum(dcom.Cantidad_Compra*prod.Precio_Unitario) as c_total\
+            from Cliente cli,Compra cpra,Categoria cate,DetalleCompra dcom,Producto prod\
+            where cli.Telefono_Cliente=cpra.Telefono_Cliente and cpra.Id_Compra=dcom.Id_Compra and prod.Id_Producto=dcom.Id_Producto\
+            and cate.Id_Categoria=prod.Id_Categoria and cate.Nombre_Categoria=\"Cheese\" \
+            group by cli.Telefono_Cliente,cli.Nombre_Cliente\
+            order by c_total desc\
+            limit 5;";
+
 
         return consulta;
     };
@@ -357,6 +365,20 @@
 
         var consulta="";
 
+        consulta+="(select cat.Nombre_Categoria, sum(dcom.Cantidad_Compra*prod.Precio_Unitario) as TotalV_Compra \
+                from Categoria cat,Producto prod,DetalleCompra dcom \
+                where cat.Id_Categoria=prod.Id_Categoria and prod.Id_Producto=dcom.Id_Producto \
+                group by cat.Nombre_Categoria \
+                order by TotalV_Compra desc \
+                limit 1) \
+                union \
+                (select cat.Nombre_Categoria, sum(dcom.Cantidad_Compra*prod.Precio_Unitario) as TotalV_Compra \
+                from Categoria cat,Producto prod,DetalleCompra dcom \
+                where cat.Id_Categoria=prod.Id_Categoria and prod.Id_Producto=dcom.Id_Producto \
+                group by cat.Nombre_Categoria \
+                order by TotalV_Compra asc \
+                limit 1);";
+
 
         return consulta;
     };
@@ -365,19 +387,19 @@
 
         var consulta="";
 
+        consulta+="select  prov.Nombre_Proveedor ,cat.Nombre_Categoria ,sum(dord.Cantidad_Venta*prod.Precio_Unitario) as Total_Vendido \
+        from Proveedor prov,Categoria cat,Producto prod,DetalleOrden dord,Orden ordd \
+        where prov.Telefono_Proveedor=ordd.Telefono_Proveedor and ordd.Id_Orden=dord.Id_Orden and dord.Id_Producto=prod.Id_Producto and prod.Id_Categoria=cat.Id_Categoria and cat.Nombre_Categoria=\"Fresh Vegetables\"\
+        group by prov.Nombre_Proveedor,cat.Nombre_Categoria\
+        order by Total_Vendido desc\
+        limit 5;";
+
 
         return consulta;
     };
+
 
     Reporte8(){
-
-        var consulta="";
-
-
-        return consulta;
-    };
-
-    Reporte9(){
 
         var consulta="";
 
@@ -400,6 +422,17 @@
 
         return consulta;
     };
+
+
+    Reporte9(){
+
+        var consulta="";
+
+
+        return consulta;
+    };
+
+
 
     Reporte10(){
 
