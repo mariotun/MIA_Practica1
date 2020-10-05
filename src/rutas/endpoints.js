@@ -59,11 +59,11 @@ ruta.get('/cargarTemporal', async function (req, res) {
     mysqlConnection.query(consulta, async function (err, rows, fields) { 
         if(!err) {
          // res.json(rows);
-         res.send("<h1>Se cargaron los datos ,a la tabla temporal correctamente.</h1>")
+         res.send("<h3>Se cargaron los datos ,a la tabla temporal correctamente.</h3>")
          
         } else {
           console.log(err);
-          res.send("Se produjo un error al intentar cargar los datos a la tabla.")
+          res.send("<h3>Se produjo un error al intentar cargar los datos a la tabla.<h3>")
         }
       });  
 
@@ -79,11 +79,11 @@ ruta.get('/cargarModelo', async function(req, res){
     mysqlConnection.query(consulta, async function (err, rows){ 
         if(!err) {
           //res.json(rows);
-          res.send("se cargo el modelo ,con los datos de la tabla temporal ,correctamente.")
+          res.send("<h3>se cargo el modelo ,con los datos de la tabla temporal ,correctamente.<h3>")
          
         } else {
          console.log(err);
-         res.send("Se produjo un error al cargar los datos a las tablas del modelo , pueda que no exista la tabla temporal.")
+         res.send("<h3>Se produjo un error al cargar los datos a las tablas del modelo , pueda que no exista la tabla temporal.<h3>")
         }
       });  
     //  res.end();
@@ -97,12 +97,12 @@ ruta.get('/eliminarTemporal', async function  (req, res)  {
   mysqlConnection.query(consulta, async function (err, rows){ 
     if(!err) {
      // res.json(rows);
-      res.send("Se eliminaron todos los datos de la tabla temporal.")
+      res.send("<h3>Se eliminaron todos los datos de la tabla temporal.<h3>")
      
     } else {
      console.log(err);
-     res.send("Se produjo un error al tratar de eliminar los datos de la tabla temporal \n\
-              puede que no exista o que no contenga datos. ")
+     res.send("<h3>Se produjo un error al tratar de eliminar los datos de la tabla temporal \n\
+              puede que no exista o que no contenga datos.<h3> ")
 
     }
   });  
@@ -117,11 +117,11 @@ ruta.get('/eliminarModelo',  async function (req, res) {
   mysqlConnection.query(consulta, async function (err, rows){ 
     if(!err) {
      // res.json(rows);
-      res.send("Se eliminaron todas las tablas del modelo.")
+      res.send("<h3>Se eliminaron todas las tablas del modelo.<h3>")
      
     } else {
      console.log(err);
-     res.send("Se produjo un error al tratar de eliminar las tablas del modelo , pueda que no exista ningun modelo creado aun. ")
+     res.send("<h3>Se produjo un error al tratar de eliminar las tablas del modelo , pueda que no exista ningun modelo creado aun.<h3>")
 
     }
   }); 
@@ -142,14 +142,14 @@ ruta.get('/consulta1', async function (req, res) {
       res.json(rows);
       console.log("Se acaba de realizar la consulta 1.")
     }else{
-      res.send("Error , No hay datos cargados dentro del modelo")
+      res.send("<h3>Error , No hay datos cargados dentro del modelo<h3>")
     }
      
     } else {
      console.log(err);
-     res.send("Se produjo un error al hacer la consulta 1: \n \
+     res.send("<h3>Se produjo un error al hacer la consulta 1: \n \
                  1.- Revise si la direccion es la correcta.\
-                 2.- Puede que no haya datos cargados aun.")
+                 2.- Puede que no haya datos cargados aun.<h3>")
 
     }
   });  
@@ -169,14 +169,14 @@ ruta.get('/consulta2', async function (req, res) {
         res.json(rows);
         console.log("Se acaba de realizar la consulta 2.")
       }else{
-        res.send("Error , No hay datos cargados dentro del modelo")
+        res.send("<h3>Error , No hay datos cargados dentro del modelo<h3>")
       }
      
     } else {
      console.log(err);
-     res.send("Se produjo un error al hacer la consulta 2: \n \
+     res.send("<h3>Se produjo un error al hacer la consulta 2: \n \
                  1.- Revise si la direccion es la correcta.\
-                 2.- Puede que no haya datos cargados aun.")
+                 2.- Puede que no haya datos cargados aun.<h3>")
     }
   });  
 
@@ -194,15 +194,15 @@ ruta.get('/consulta3', async function (req, res) {
         res.json(rows);
         console.log("Se acaba de realizar la consulta 3.")
       }else{
-        res.send("Error , No hay datos cargados dentro del modelo")
+        res.send("<h3>Error , No hay datos cargados dentro del modelo<h3>")
       }
 
      
     } else {
      console.log(err);
-     res.send("Se produjo un error al hacer la consulta 3: \n \
+     res.send("<h3>Se produjo un error al hacer la consulta 3: \n \
                  1.- Revise si la direccion es la correcta.\
-                 2.- Puede que no haya datos cargados aun.")
+                 2.- Puede que no haya datos cargados aun.<h3>")
     }
   });  
 
@@ -220,15 +220,15 @@ ruta.get('/consulta4', async function (req, res) {
         res.json(rows);
         console.log("Se acaba de realizar la consulta 4.")
       }else{
-        res.send("Error , No hay datos cargados dentro del modelo")
+        res.send("<h3>Error , No hay datos cargados dentro del modelo<h3>")
       }
 
      
     } else {
      console.log(err);
-     res.send("Se produjo un error al hacer la consulta 4: \n \
+     res.send("<h3>Se produjo un error al hacer la consulta 4: \n \
                  1.- Revise si la direccion es la correcta.\
-                 2.- Puede que no haya datos cargados aun.")
+                 2.- Puede que no haya datos cargados aun.<h3>")
     }
   });  
 
@@ -246,15 +246,15 @@ ruta.get('/consulta5', async function (req, res) {
         res.json(rows);
         console.log("Se acaba de realizar la consulta 5.")
       }else{
-        res.send("Error , No hay datos cargados dentro del modelo")
+        res.send("<h3>Error , No hay datos cargados dentro del modelo<h3>")
       }
 
      
     } else {
      console.log(err);
-     res.send("Se produjo un error al hacer la consulta 5: \n \
+     res.send("<h3>Se produjo un error al hacer la consulta 5: \n \
                  1.- Revise si la direccion es la correcta.\
-                 2.- Puede que no haya datos cargados aun.")
+                 2.- Puede que no haya datos cargados aun.<h3>")
     }
   }); 
 
@@ -272,14 +272,14 @@ ruta.get('/consulta6', async function (req, res) {
         res.json(rows);
         console.log("Se acaba de realizar la consulta 6.")
       }else{
-        res.send("Error , No hay datos cargados dentro del modelo")
+        res.send("<h3>Error , No hay datos cargados dentro del modelo<h3>")
       }
      
     } else {
      console.log(err);
-     res.send("Se produjo un error al hacer la consulta 6: \n \
+     res.send("<h3>Se produjo un error al hacer la consulta 6: \n \
                  1.- Revise si la direccion es la correcta.\
-                 2.- Puede que no haya datos cargados aun.")
+                 2.- Puede que no haya datos cargados aun.<h3>")
     }
   }); 
 
@@ -297,15 +297,15 @@ ruta.get('/consulta7', async function (req, res)  {
         res.json(rows);
         console.log("Se acaba de realizar la consulta 7.")
       }else{
-        res.send("Error , No hay datos cargados dentro del modelo")
+        res.send("<h3>Error , No hay datos cargados dentro del modelo<h3>")
       }
 
      
     } else {
      console.log(err);
-     res.send("Se produjo un error al hacer la consulta 7: \n \
+     res.send("<h3>Se produjo un error al hacer la consulta 7: \n \
                  1.- Revise si la direccion es la correcta.\
-                 2.- Puede que no haya datos cargados aun.")
+                 2.- Puede que no haya datos cargados aun.<h3>")
     }
   }); 
 
@@ -323,15 +323,15 @@ ruta.get('/consulta8', async function (req, res)  {
         res.json(rows);
         console.log("Se acaba de realizar la consulta 8.")
       }else{
-        res.send("Error , No hay datos cargados dentro del modelo")
+        res.send("<h3>Error , No hay datos cargados dentro del modelo<h3>")
       }
 
      
     } else {
      console.log(err);
-     res.send("Se produjo un error al hacer la consulta 8: \n \
+     res.send("<h3>Se produjo un error al hacer la consulta 8: \n \
                  1.- Revise si la direccion es la correcta.\
-                 2.- Puede que no haya datos cargados aun.")
+                 2.- Puede que no haya datos cargados aun.<h3>")
     }
   }); 
 
@@ -349,15 +349,15 @@ ruta.get('/consulta9', async function (req, res) {
         res.json(rows);
         console.log("Se acaba de realizar la consulta 9.")
       }else{
-        res.send("Error , No hay datos cargados dentro del modelo")
+        res.send("<h3>Error , No hay datos cargados dentro del modelo<h3>")
       }
 
      
     } else {
      console.log(err);
-     res.send("Se produjo un error al hacer la consulta 9: \n \
+     res.send("<h3>Se produjo un error al hacer la consulta 9: \n \
                  1.- Revise si la direccion es la correcta.\
-                 2.- Puede que no haya datos cargados aun.")
+                 2.- Puede que no haya datos cargados aun.<h3>")
     }
   }); 
 
@@ -375,15 +375,15 @@ ruta.get('/consulta10', async function (req, res) {
         res.json(rows);
         console.log("Se acaba de realizar la consulta 10.")
       }else{
-        res.send("Error , No hay datos cargados dentro del modelo")
+        res.send("<h3>Error , No hay datos cargados dentro del modelo<h3>")
       }
 
      
     } else {
      console.log(err);
-     res.send("Se produjo un error al hacer la consulta 10: \n \
+     res.send("<h3>Se produjo un error al hacer la consulta 10: \n \
                  1.- Revise si la direccion es la correcta.\
-                 2.- Puede que no haya datos cargados aun.")
+                 2.- Puede que no haya datos cargados aun.<h3>")
     }
   }); 
 

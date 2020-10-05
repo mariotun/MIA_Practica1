@@ -450,6 +450,13 @@
 
         var consulta="";
 
+        consulta+="select prov.Nombre_Proveedor,prov.Telefono_Proveedor,ordd.Id_Orden,sum(dord.Cantidad_Venta*prod.Precio_Unitario) as Total_Orden, dord.Cantidad_Venta as Cant_Orden\
+        from Proveedor prov,Orden ordd,DetalleOrden dord,Producto prod,Categoria cat\
+        where prov.Telefono_Proveedor=ordd.Telefono_Proveedor and ordd.Id_Orden=dord.Id_Orden and dord.Id_Producto=prod.Id_Producto\
+        and prod.Id_Categoria=cat.Id_Categoria\
+        group by prov.Telefono_Proveedor,prov.Nombre_Proveedor, ordd.Id_Orden,Cant_Orden\
+        order by Cant_Orden asc limit 20;";
+
 
         return consulta;
     };
